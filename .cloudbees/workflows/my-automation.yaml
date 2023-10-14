@@ -11,9 +11,10 @@ jobs:
       - uses: docker://alpine/git:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
-      - name: checkout
-        uses: cloudbees-io/checkout@v1.0.7
-      - name: Build Go App
+      - uses: cloudbees-io/checkout@v1
+      - name: Set up Git credentials
+        uses: cloudbees-io/configure-git-global-credentials@v1
+      - name: Build Go app
         uses: docker://golang:1.20
         run: |
           go build -v ./...
