@@ -1,0 +1,31 @@
+name: Coverity scan
+
+on:
+  push:
+    branches:
+    - mains
+
+jobs:
+  coverity-codescan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Print GITHUB_RUN_ID
+        shell: bash
+        run: |
+          echo "Run id is $GITHUB_RUN_ID"
+          echo "Source is ${{ github.server_url }}/${{ github.repository }}"
+          echo "Subject is $GITHUB_WORKFLOW_REF|${{ github.run_id }}|${{ github.run_attempt }}|${{ github.run_number }}"
+          echo "Job is $GITHUB_JOB"
+          echo "Step id is ${{ steps.internal.id }}"
+
+      - name: Coverity scan
+        uses: cloudbees-io/coverity-github-test@main
+        with:
+          cloudbees_pat_token: ${{ secrets.CLOUDBEES_QA_PAT }}
+          cloudbees_api_url: ${{ vars.CLOUDBEES_QA_API_URL }}
+          step_id: "coverity-scan"
+          server-url: ${{ vars.COVERITY_SERVER_URL }}
+          api-token: ${{ secrets.COVERITY_API_TOKEN }}
